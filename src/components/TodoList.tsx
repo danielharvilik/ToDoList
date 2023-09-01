@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { TodoForm } from './TodoForm';
 import { useQuery } from '@tanstack/react-query';
 import { getAllTodos } from '../tasksService';
+import { TodoForm } from './TodoForm';
 
 function TodoList() {
   const { data: todos, isLoading } = useQuery({ queryKey: ['todos'], queryFn: getAllTodos });
