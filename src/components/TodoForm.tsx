@@ -1,22 +1,32 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { CreateTodoBody, postTodo, todoSchema } from '../tasksService';
+import { CreateTodoBody, Todo, UpdateTodoBody, postTodo, putTodo, todoSchema } from '../tasksService';
+import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 
-export const TodoForm = () => {
+type TodoFormProps = {
+  initialTodo?: Todo;
+};
+
+export const TodoForm = ({ initialTodo }: TodoFormProps) => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
-  } = useForm<CreateTodoBody>({ resolver: zodResolver(todoSchema) });
+  } = useForm<CreateTodoBody>({ resolver: zodResolver(todoSchema), defaultValues: initialTodo });
 
   const postTodoMutation = useMutation({
-    mutationFn: postTodo,
+    mutationFn: initialTodo ? (todo: UpdateTodoBody) => putTodo(initialTodo.id, todo) : postTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
+      queryClient.invalidateQueries({ queryKey: ['todos', `todo_${initialTodo?.id}`] });
       reset();
+      navigate('/');
     },
   });
 
@@ -26,6 +36,8 @@ export const TodoForm = () => {
     console.log(createTodo);
     postTodoMutation.mutate(createTodo);
   };
+
+  const isUpdating = Boolean(initialTodo);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -43,10 +55,11 @@ export const TodoForm = () => {
 
       <label>Deadline</label>
       <input
-        type="date"
         {...register('deadline')}
+        type="date"
         placeholder="Deadline"
         className="input input-bordered input-neutral"
+        min={new Date().toJSON().slice(0, 10)}
       />
       <label>Description</label>
       <textarea
@@ -54,12 +67,30 @@ export const TodoForm = () => {
         placeholder="Enter description"
         className="textarea textarea-bordered"
       />
+      {initialTodo ? (
+        <>
+          <input
+            type="checkbox"
+            checked={initialTodo.isCompleted}
+            className="checkbox"
+            disabled
+          />
+        </>
+      ) : (
+        <></>
+      )}
       <button
         type="submit"
         className="btn btn-active btn-neutral"
         disabled={postTodoMutation.isLoading}
       >
-        Add
+        {isUpdating ? 'Edit' : 'Add'}
+      </button>
+      <button
+        className="btn btn-active btn-neutral"
+        onClick={() => navigate('/')}
+      >
+        Home page
       </button>
     </form>
   );
