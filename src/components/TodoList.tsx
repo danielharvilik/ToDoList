@@ -1,11 +1,11 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Todo, deleteTodo, getAllTodos, putTodo } from '../tasksService';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import { Todo, getAllTodos } from '../tasksService';
+import { TodoCard } from './TodoCard';
 
 function TodoList() {
   const { data: todos, isLoading } = useQuery({ queryKey: ['todos'], queryFn: getAllTodos });
-  const queryClient = useQueryClient();
 
   const navigate = useNavigate();
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
@@ -72,38 +72,8 @@ function TodoList() {
       </button>
       <br />
       <br />
-      {filteredTodos?.map((todo) => (
-        <React.Fragment key={todo.id}>
-          <ul
-            onClick={() => navigate(`/${todo.id}`)}
-            className="cursor-pointer"
-          >
-            <li>{todo.title}</li>
-            <li>{todo.deadline}</li>
-            <li>{todo.description}</li>
-          </ul>
-          <input
-            type="checkbox"
-            defaultChecked={todo.isCompleted}
-            className="checkbox"
-            onChange={async () => {
-              await putTodo(todo.id, { isCompleted: !todo.isCompleted });
-              queryClient.invalidateQueries({ queryKey: ['todos'] });
-            }}
-          />
-          <button
-            className="btn btn-active btn-neutral"
-            onClick={async () => {
-              await deleteTodo(todo.id);
-              queryClient.invalidateQueries({ queryKey: ['todos'] });
-            }}
-          >
-            delete
-          </button>
-          <br />
-          <br />
-          <hr />
-        </React.Fragment>
+      {filteredTodos?.map((todo: Todo) => (
+        <TodoCard todo={todo} />
       ))}
       <button
         className="btn btn-active btn-neutral"

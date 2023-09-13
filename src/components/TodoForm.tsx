@@ -1,9 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { CreateTodoBody, Todo, UpdateTodoBody, postTodo, putTodo, todoSchema } from '../tasksService';
 import { useNavigate } from 'react-router-dom';
-import dayjs from 'dayjs';
+import { CreateTodoBody, Todo, UpdateTodoBody, postTodo, putTodo, todoSchema } from '../tasksService';
 
 type TodoFormProps = {
   initialTodo?: Todo;
@@ -73,6 +72,7 @@ export const TodoForm = ({ initialTodo }: TodoFormProps) => {
             type="checkbox"
             checked={initialTodo.isCompleted}
             className="checkbox"
+            onChange={() => {}}
             disabled
           />
         </>
