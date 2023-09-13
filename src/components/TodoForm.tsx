@@ -16,7 +16,6 @@ export const TodoForm = ({ initialTodo }: TodoFormProps) => {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
   } = useForm<CreateTodoBody>({ resolver: zodResolver(todoSchema), defaultValues: initialTodo });
 
