@@ -28,10 +28,7 @@ export const TodoForm = ({ initialTodo }: TodoFormProps) => {
     },
   });
 
-  console.log(errors);
-
   const onSubmit: SubmitHandler<CreateTodoBody> = (createTodo) => {
-    console.log(createTodo);
     postTodoMutation.mutate(createTodo);
   };
 
@@ -65,32 +62,36 @@ export const TodoForm = ({ initialTodo }: TodoFormProps) => {
         placeholder="Enter description"
         className="textarea textarea-bordered"
       />
-      {initialTodo ? (
-        <>
-          <input
-            type="checkbox"
-            checked={initialTodo.isCompleted}
-            className="checkbox"
-            onChange={() => {}}
-            disabled
-          />
-        </>
-      ) : (
-        <></>
-      )}
-      <button
-        type="submit"
-        className="btn btn-active btn-neutral"
-        disabled={postTodoMutation.isLoading}
-      >
-        {isUpdating ? 'Edit' : 'Add'}
-      </button>
-      <button
-        className="btn btn-active btn-neutral"
-        onClick={() => navigate('/')}
-      >
-        Home page
-      </button>
+      <div>
+        {initialTodo ? (
+          <>
+            <input
+              type="checkbox"
+              checked={initialTodo.isCompleted}
+              className="checkbox"
+              onChange={() => {}}
+              disabled
+            />
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
+      <div className="flex justify-between w-100">
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={postTodoMutation.isLoading}
+        >
+          {isUpdating ? 'Edit' : 'Add'}
+        </button>
+        <button
+          className="btn btn-active btn-neutral"
+          onClick={() => navigate('/')}
+        >
+          Home page
+        </button>
+      </div>
     </form>
   );
 };

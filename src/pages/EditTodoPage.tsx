@@ -10,7 +10,6 @@ export const EditTodoPage = () => {
     isLoading,
     isFetching,
   } = useQuery({ queryKey: [`todo_${id}`], queryFn: () => getTodoById(id || '') });
-  console.log(todo);
 
   if (isLoading || isFetching) {
     return <>Loading...</>;

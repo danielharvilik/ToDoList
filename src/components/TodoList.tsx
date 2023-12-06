@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Todo, getAllTodos } from '../tasksService';
 import { TodoCard } from './TodoCard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 function TodoList() {
   const { data: todos, isLoading } = useQuery({ queryKey: ['todos'], queryFn: getAllTodos });
@@ -23,63 +25,67 @@ function TodoList() {
       } else return !todo.isCompleted;
     }) || [];
 
-  console.log(filteredTodos);
-  console.log(filter);
-
   return (
     <>
       <h1>ToDo List</h1>
       <br />
       <br />
-      <div className="dropdown">
-        <label
-          tabIndex={0}
-          className="btn m-1"
-        >
-          Filter
-        </label>
-        <ul
-          tabIndex={0}
-          className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-        >
-          <li>
-            <a
-              onClick={() => {
-                setFilter('active');
-              }}
-            >
-              Active
-            </a>
-          </li>
-          <li>
-            <a
-              onClick={() => {
-                setFilter('completed');
-              }}
-            >
-              Completed
-            </a>
-          </li>
-        </ul>
-      </div>
-      <button
-        className="btn-active btn-neutral ml-32"
-        onClick={() => {
-          setFilter('all');
-        }}
-      >
-        reset Filter
-      </button>
+      <section className="flex w-full justify-between">
+        <details className="dropdown w-52">
+          <summary
+            tabIndex={0}
+            className="btn btn-primary m-1"
+          >
+            Filter
+          </summary>
+          <ul
+            tabIndex={0}
+            className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
+          >
+            <li>
+              <a
+                onClick={() => {
+                  setFilter('active');
+                }}
+              >
+                Active
+              </a>
+            </li>
+            <li>
+              <a
+                onClick={() => {
+                  setFilter('completed');
+                }}
+              >
+                Completed
+              </a>
+            </li>
+          </ul>
+        </details>
+        <div className="w-52">
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setFilter('all');
+            }}
+          >
+            reset Filter
+          </button>
+        </div>
+      </section>
       <br />
       <br />
-      {filteredTodos?.map((todo: Todo) => (
-        <TodoCard todo={todo} />
-      ))}
+      <section>
+        {filteredTodos?.map((todo: Todo) => (
+          <TodoCard todo={todo} />
+        ))}
+      </section>
+
       <button
-        className="btn btn-active btn-neutral"
+        className="btn btn-primary rounded-full bottom-12 right-12 fixed inline-flex items-center justify-center w-12 h-12"
         onClick={() => navigate('/create')}
       >
-        Create todo
+      <FontAwesomeIcon icon={faPlus} size="xl"/>
       </button>
     </>
   );
