@@ -16,7 +16,7 @@ export const TodoForm = ({ initialTodo }: TodoFormProps) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { },
   } = useForm<CreateTodoBody>({ resolver: zodResolver(todoSchema), defaultValues: initialTodo });
 
   const postTodoMutation = useMutation({
